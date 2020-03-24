@@ -68,7 +68,6 @@ defmodule MdFlashcards.Flashcards do
 
   """
   def update_card_group(%CardGroup{} = card_group, attrs) do
-    IO.inspect(attrs)
     card_group
     |> CardGroup.changeset(attrs)
     |> Repo.update()
@@ -210,8 +209,9 @@ defmodule MdFlashcards.Flashcards do
       [%Card{}, ...]
 
   """
-  def list_cards do
-    Repo.all(Card)
+  def list_cards(card_set_id) do
+    query = from c in Card, where: c.card_set_id == ^card_set_id
+    Repo.all(query)
   end
 
   @doc """
@@ -246,6 +246,21 @@ defmodule MdFlashcards.Flashcards do
     %Card{}
     |> Card.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def create_cards(data, card_set_id) do
+    datetime = NaiveDateTime.truncate(NaiveDateTime.utc_now, :second)
+    transformed_cards =
+      data
+      |> Enum.map(fn(row) ->
+        %{}
+        |> Map.put(:question, row["question"])
+        |> Map.put(:answer, row["answer"])
+        |> Map.put(:card_set_id, String.to_integer(card_set_id))
+        |> Map.put(:inserted_at, datetime)
+        |> Map.put(:updated_at, datetime)
+      end)
+    Repo.insert_all(Card, transformed_cards, [])
   end
 
   @doc """

@@ -18,4 +18,9 @@ defmodule MdFlashcards.Flashcards.Card do
     |> cast(attrs, @required_fields)
     |> validate_required([:question, :answer])
   end
+
+  def changeset_all(card, list) do
+    list
+    |> Enum.map(fn row -> changeset(card, row) end)
+  end
 end

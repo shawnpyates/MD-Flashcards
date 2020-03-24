@@ -7,17 +7,13 @@ defmodule MdFlashcardsWeb.CardController do
   action_fallback MdFlashcardsWeb.FallbackController
 
   def index(conn, _params) do
-    cards = Flashcards.list_cards()
+    cards = Flashcards.list_cards(conn.params["card_set_id"])
     render(conn, "index.json", cards: cards)
   end
 
-  def create(conn, %{"card" => card_params}) do
-    with {:ok, %Card{} = card} <- Flashcards.create_card(card_params) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", Routes.card_path(conn, :show, card))
-      |> render("show.json", card: card)
-    end
+  def create(conn, %{"cards" => card_data}) do
+    Flashcards.create_cards(card_data, conn.params["card_set_id"])
+    send_resp(conn, :created, "ok")
   end
 
   def show(conn, %{"id" => id}) do
