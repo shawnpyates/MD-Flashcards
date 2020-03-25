@@ -15,6 +15,11 @@ defmodule MdFlashcardsWeb.UserView do
       name: user.name,
       email: user.email,
       provider: user.provider,
-      token: user.token}
+      token: user.token,
+      card_groups:  Enum.map(user.card_groups, fn group ->
+        Map.from_struct(group)
+        |> Map.drop([:__meta__, :user, :card_sets])
+      end)
+    }
   end
 end

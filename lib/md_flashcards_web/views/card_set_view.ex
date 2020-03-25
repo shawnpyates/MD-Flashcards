@@ -11,7 +11,14 @@ defmodule MdFlashcardsWeb.CardSetView do
   end
 
   def render("card_set.json", %{card_set: card_set}) do
+    IO.inspect(card_set)
     %{id: card_set.id,
-      name: card_set.name}
+      name: card_set.name,
+      card_group_id: card_set.card_group_id,
+      cards: Enum.map(card_set.cards, fn card ->
+        Map.from_struct(card)
+        |> Map.drop([:__meta__, :card_set])
+      end)
+    }
   end
 end

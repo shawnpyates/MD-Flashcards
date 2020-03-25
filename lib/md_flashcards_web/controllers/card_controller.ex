@@ -12,10 +12,11 @@ defmodule MdFlashcardsWeb.CardController do
   end
 
   def create(conn, %{"cards" => card_data}) do
-    Flashcards.create_cards(card_data, conn.params["card_set_id"])
+    Flashcards.create_card(card_data)
     send_resp(conn, :created, "ok")
   end
 
+  @spec show(Plug.Conn.t(), map) :: Plug.Conn.t()
   def show(conn, %{"id" => id}) do
     card = Flashcards.get_card!(id)
     render(conn, "show.json", card: card)

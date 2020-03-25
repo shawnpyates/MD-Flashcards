@@ -35,7 +35,7 @@ defmodule MdFlashcards.Flashcards do
       ** (Ecto.NoResultsError)
 
   """
-  def get_card_group!(id), do: Repo.get!(CardGroup, id)
+  def get_card_group!(id), do: Repo.get!(CardGroup, id) |> Repo.preload(:card_sets)
 
   @doc """
   Creates a card_group.
@@ -131,7 +131,7 @@ defmodule MdFlashcards.Flashcards do
       ** (Ecto.NoResultsError)
 
   """
-  def get_card_set!(id), do: Repo.get!(CardSet, id)
+  def get_card_set!(id), do: Repo.get!(CardSet, id) |> Repo.preload(:cards)
 
   @doc """
   Creates a card_set.
@@ -246,21 +246,6 @@ defmodule MdFlashcards.Flashcards do
     %Card{}
     |> Card.changeset(attrs)
     |> Repo.insert()
-  end
-
-  def create_cards(data, card_set_id) do
-    datetime = NaiveDateTime.truncate(NaiveDateTime.utc_now, :second)
-    transformed_cards =
-      data
-      |> Enum.map(fn(row) ->
-        %{}
-        |> Map.put(:question, row["question"])
-        |> Map.put(:answer, row["answer"])
-        |> Map.put(:card_set_id, String.to_integer(card_set_id))
-        |> Map.put(:inserted_at, datetime)
-        |> Map.put(:updated_at, datetime)
-      end)
-    Repo.insert_all(Card, transformed_cards, [])
   end
 
   @doc """

@@ -12,6 +12,11 @@ defmodule MdFlashcardsWeb.CardGroupView do
 
   def render("card_group.json", %{card_group: card_group}) do
     %{id: card_group.id,
-      name: card_group.name}
+      name: card_group.name,
+      card_sets: Enum.map(card_group.card_sets, fn set ->
+        Map.from_struct(set)
+        |> Map.drop([:__meta__, :card_group, :cards])
+      end)
+    }
   end
 end

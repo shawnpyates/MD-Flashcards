@@ -2,6 +2,9 @@ defmodule MdFlashcards.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @required_fields ~w(email provider token)a
+  @optional_fields ~w(name)a
+
   schema "users" do
     field :email, :string
     field :name, :string
@@ -16,7 +19,7 @@ defmodule MdFlashcards.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :email, :provider, :token])
-    |> validate_required([:name, :email, :provider, :token])
+    |> cast(attrs, @required_fields ++ @optional_fields)
+    |> validate_required(@required_fields)
   end
 end

@@ -35,7 +35,7 @@ defmodule MdFlashcards.Accounts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user!(id), do: Repo.get!(User, id) |> Repo.preload(:card_groups)
 
   @doc """
   Creates a user.
@@ -100,5 +100,14 @@ defmodule MdFlashcards.Accounts do
   """
   def change_user(%User{} = user) do
     User.changeset(user, %{})
+  end
+
+  def insert_or_update_user(changeset) do
+    case Repo.get_by(User, email: changeset.changes.email) do
+      nil ->
+        Repo.insert(changeset)
+      user ->
+        {:ok, user}
+    end
   end
 end

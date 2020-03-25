@@ -17,8 +17,9 @@ defmodule MdFlashcardsWeb.Router do
     end
 
     resources "/card_sets", CardSetController, except: [:index, :new, :edit] do
-      resources "/cards", CardController, except: [:new, :edit, :update]
-      put "/cards", CardController, :update
+      get "/cards", CardController, :index
     end
+
+    resources "/cards", CardController, except: [:index, :new, :edit]
   end
 end

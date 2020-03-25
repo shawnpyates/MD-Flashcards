@@ -1,5 +1,6 @@
 defmodule MdFlashcardsWeb.UserController do
   use MdFlashcardsWeb, :controller
+  plug Ueberauth
 
   alias MdFlashcards.Accounts
   alias MdFlashcards.Accounts.User
@@ -38,6 +39,33 @@ defmodule MdFlashcardsWeb.UserController do
 
     with {:ok, %User{}} <- Accounts.delete_user(user) do
       send_resp(conn, :no_content, "")
+    end
+  end
+
+  def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _attrs) do
+    user_attrs = %{token: auth.credentials.token, email: auth.info.email, provider: "github"}
+    changeset = User.changeset(%User{}, user_attrs)
+
+    signin(conn, changeset)
+  end
+
+  def signout(conn, _attrs) do
+    conn
+    |> configure_session(drop: true)
+    |> redirect(to: Routes.user_path(conn, :index))
+  end
+
+  defp signin(conn, changeset) do
+    case Accounts.insert_or_update_user(changeset) do
+      {:ok, user} ->
+        conn
+        |> put_flash(:info, "Welcome back!")
+        |> put_session(:user_id, user.id)
+        |> redirect(to: Routes.user_card_group_path(conn, :index, id: user.id))
+      {:error, _reason} ->
+        conn
+        |> put_flash(:error, "Error signing in")
+        |> redirect(to: Routes.user_path(conn, :index))
     end
   end
 end
