@@ -4,6 +4,7 @@ defmodule MdFlashcardsWeb.UserController do
 
   alias MdFlashcards.Accounts
   alias MdFlashcards.Accounts.User
+  alias MdFlashcards.Repo
 
   action_fallback MdFlashcardsWeb.FallbackController
 
@@ -59,12 +60,9 @@ defmodule MdFlashcardsWeb.UserController do
     case Accounts.insert_or_update_user(changeset) do
       {:ok, user} ->
         conn
-        |> put_flash(:info, "Welcome back!")
-        |> put_session(:user_id, user.id)
-        |> redirect(to: Routes.user_card_group_path(conn, :index, id: user.id))
+        |> render("show.json", user: user |> Repo.preload(:card_groups))
       {:error, _reason} ->
         conn
-        |> put_flash(:error, "Error signing in")
         |> redirect(to: Routes.user_path(conn, :index))
     end
   end

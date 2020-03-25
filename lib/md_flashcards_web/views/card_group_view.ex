@@ -2,6 +2,17 @@ defmodule MdFlashcardsWeb.CardGroupView do
   use MdFlashcardsWeb, :view
   alias MdFlashcardsWeb.CardGroupView
 
+  defp get_sets(group) do
+    if Ecto.assoc_loaded?(group.card_sets) do
+      Enum.map(group.card_sets, fn set ->
+        Map.from_struct(set)
+        |> Map.drop([:__meta__, :card_group, :cards])
+      end)
+    else
+      nil
+    end
+  end
+
   def render("index.json", %{card_groups: card_groups}) do
     %{data: render_many(card_groups, CardGroupView, "card_group.json")}
   end
@@ -13,10 +24,7 @@ defmodule MdFlashcardsWeb.CardGroupView do
   def render("card_group.json", %{card_group: card_group}) do
     %{id: card_group.id,
       name: card_group.name,
-      card_sets: Enum.map(card_group.card_sets, fn set ->
-        Map.from_struct(set)
-        |> Map.drop([:__meta__, :card_group, :cards])
-      end)
+      card_sets: get_sets(card_group)
     }
   end
 end

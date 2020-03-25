@@ -22,4 +22,10 @@ defmodule MdFlashcardsWeb.Router do
 
     resources "/cards", CardController, except: [:index, :new, :edit]
   end
+
+  scope "/auth", MdFlashcardsWeb do
+    get "/:provider", UserController, :request
+    get "/:provider/callback", UserController, :callback
+    get "/signout", UserController, :signout
+  end
 end
