@@ -43,7 +43,9 @@ defmodule MdFlashcardsWeb.UserController do
   end
 
   def get_current(conn, _attrs) do
-    # TODO - send back current user
+    conn
+    |> put_resp_header("Access-Control-Allow-Credentials", "true")
+    |> render("show.json", user: conn.assigns.user)
   end
 
   def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _attrs) do
