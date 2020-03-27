@@ -4,7 +4,6 @@ defmodule MdFlashcardsWeb.UserController do
 
   alias MdFlashcards.Accounts
   alias MdFlashcards.Accounts.User
-  alias MdFlashcards.Repo
 
   action_fallback MdFlashcardsWeb.FallbackController
 
@@ -43,8 +42,17 @@ defmodule MdFlashcardsWeb.UserController do
     end
   end
 
+  def get_current(conn, _attrs) do
+    # TODO - send back current user
+  end
+
   def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _attrs) do
-    user_attrs = %{token: auth.credentials.token, email: auth.info.email, provider: "github"}
+    user_attrs = %{
+      token: auth.credentials.token,
+      email: auth.info.email,
+      name: auth.info.name,
+      provider: "github"
+    }
     changeset = User.changeset(%User{}, user_attrs)
 
     signin(conn, changeset)
@@ -60,7 +68,8 @@ defmodule MdFlashcardsWeb.UserController do
     case Accounts.insert_or_update_user(changeset) do
       {:ok, user} ->
         conn
-        |> render("show.json", user: user |> Repo.preload(:card_groups))
+        |> put_session(:user_id, user.id)
+        |> redirect(external: "http://localhost:3000/auth/#{user.id}")
       {:error, _reason} ->
         conn
         |> redirect(to: Routes.user_path(conn, :index))

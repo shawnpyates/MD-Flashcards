@@ -20,7 +20,7 @@ defmodule MdFlashcards.MixProject do
   def application do
     [
       mod: {MdFlashcards.Application, []},
-      extra_applications: [:logger, :runtime_tools, :ueberauth, :ueberauth_github]
+      extra_applications: [:logger, :runtime_tools, :ueberauth, :ueberauth_github, :corsica]
     ]
   end
 
@@ -42,7 +42,8 @@ defmodule MdFlashcards.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:ueberauth, "~> 0.6"},
-      {:ueberauth_github, "~> 0.7"}
+      {:ueberauth_github, "~> 0.7"},
+      {:corsica, "~> 1.0"}
     ]
   end
 
