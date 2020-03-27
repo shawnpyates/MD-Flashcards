@@ -22,7 +22,9 @@ defmodule MdFlashcardsWeb.CardGroupController do
 
   def show(conn, %{"id" => id}) do
     card_group = Flashcards.get_card_group!(id)
-    render(conn, "show.json", card_group: card_group)
+    conn
+    |> put_resp_header("Access-Control-Allow-Credentials", "true")
+    |> render("show.json", card_group: card_group)
   end
 
   def update(conn, %{"id" => id, "card_group" => card_group_params}) do

@@ -39,8 +39,9 @@ defmodule MdFlashcardsWeb.Router do
   scope "/auth", MdFlashcardsWeb do
     pipe_through :auth
 
+    get "/signout", UserController, :signout
+
     get "/:provider", UserController, :request
     get "/:provider/callback", UserController, :callback
-    get "/signout", UserController, :signout
   end
 end
