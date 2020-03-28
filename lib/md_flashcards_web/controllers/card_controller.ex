@@ -11,9 +11,13 @@ defmodule MdFlashcardsWeb.CardController do
     render(conn, "index.json", cards: cards)
   end
 
-  def create(conn, %{"cards" => card_data}) do
-    Flashcards.create_card(card_data)
-    send_resp(conn, :created, "ok")
+  def create(conn, %{"card" => card_params}) do
+    with {:ok, %Card{} = card} <- Flashcards.create_card(card_params) do
+      conn
+      |> put_status(:created)
+      |> put_resp_header("location", Routes.card_path(conn, :show, card))
+      |> render("show.json", card: card)
+    end
   end
 
   @spec show(Plug.Conn.t(), map) :: Plug.Conn.t()
