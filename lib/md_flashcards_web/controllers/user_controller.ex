@@ -44,7 +44,6 @@ defmodule MdFlashcardsWeb.UserController do
 
   def get_current(conn, _attrs) do
     conn
-    |> put_resp_header("Access-Control-Allow-Credentials", "true")
     |> render("show.json", user: conn.assigns.user)
   end
 

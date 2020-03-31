@@ -23,7 +23,6 @@ defmodule MdFlashcardsWeb.CardSetController do
   def show(conn, %{"id" => id}) do
     card_set = Flashcards.get_card_set!(id)
     conn
-    |> put_resp_header("Access-Control-Allow-Credentials", "true")
     |> render("show.json", card_set: card_set)
   end
 

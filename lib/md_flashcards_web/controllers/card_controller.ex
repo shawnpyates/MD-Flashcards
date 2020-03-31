@@ -15,7 +15,6 @@ defmodule MdFlashcardsWeb.CardController do
     with {:ok, %Card{} = card} <- Flashcards.create_card(card_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", Routes.card_path(conn, :show, card))
       |> render("show.json", card: card)
     end
   end
