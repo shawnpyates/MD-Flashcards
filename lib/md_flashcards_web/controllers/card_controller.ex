@@ -29,7 +29,8 @@ defmodule MdFlashcardsWeb.CardController do
     card = Flashcards.get_card!(id)
 
     with {:ok, %Card{} = card} <- Flashcards.update_card(card, card_params) do
-      render(conn, "show.json", card: card)
+      cards = Flashcards.list_cards(card.card_set_id)
+      render(conn, "index.json", cards: cards)
     end
   end
 
@@ -37,7 +38,8 @@ defmodule MdFlashcardsWeb.CardController do
     card = Flashcards.get_card!(id)
 
     with {:ok, %Card{}} <- Flashcards.delete_card(card) do
-      send_resp(conn, :no_content, "")
+      cards = Flashcards.list_cards(card.card_set_id)
+      render(conn, "index.json", cards: cards)
     end
   end
 end
