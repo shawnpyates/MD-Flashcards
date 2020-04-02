@@ -17,6 +17,7 @@ defmodule MdFlashcardsWeb.UserView do
       provider: user.provider,
       card_groups:  Enum.map(user.card_groups, fn group ->
         Map.from_struct(group)
+        |> Map.put(:card_set_length, Enum.count(group.card_sets))
         |> Map.drop([:__meta__, :user, :card_sets])
       end)
     }

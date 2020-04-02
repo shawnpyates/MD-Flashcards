@@ -7,6 +7,7 @@ defmodule MdFlashcards.Flashcards do
   alias MdFlashcards.Repo
 
   alias MdFlashcards.Flashcards.CardGroup
+  alias MdFlashcards.Flashcards.CardSet
 
   @doc """
   Returns the list of card_groups.
@@ -35,7 +36,17 @@ defmodule MdFlashcards.Flashcards do
       ** (Ecto.NoResultsError)
 
   """
-  def get_card_group!(id), do: Repo.get!(CardGroup, id) |> Repo.preload(:card_sets)
+  # def get_card_group!(id), do: Repo.get!(CardGroup, id) |> Repo.preload(:card_sets)
+  def get_card_group!(id) do
+    Repo.one from(
+      g in CardGroup,
+      where: g.id == ^id,
+      preload: [
+        card_sets: ^Ecto.Query.from(s in CardSet, preload: [:cards])
+      ]
+    )
+  end
+
 
   @doc """
   Creates a card_group.
