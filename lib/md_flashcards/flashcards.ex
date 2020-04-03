@@ -36,7 +36,6 @@ defmodule MdFlashcards.Flashcards do
       ** (Ecto.NoResultsError)
 
   """
-  # def get_card_group!(id), do: Repo.get!(CardGroup, id) |> Repo.preload(:card_sets)
   def get_card_group!(id) do
     Repo.one from(
       g in CardGroup,
@@ -125,7 +124,16 @@ defmodule MdFlashcards.Flashcards do
 
   """
   def list_card_sets do
-    Repo.all(CardSet)
+    Repo.all from(
+      s in CardSet,
+      preload: [
+        :cards,
+        card_group: ^Ecto.Query.from(
+          g in CardGroup,
+          preload: [:user]
+        )
+      ]
+    )
   end
 
   @doc """
@@ -142,7 +150,7 @@ defmodule MdFlashcards.Flashcards do
       ** (Ecto.NoResultsError)
 
   """
-  def get_card_set!(id), do: Repo.get!(CardSet, id) |> Repo.preload(:cards)
+  def get_card_set!(id), do: Repo.get!(CardSet, id) |> Repo.preload([:cards, :card_group])
 
   @doc """
   Creates a card_set.

@@ -13,19 +13,44 @@ defmodule MdFlashcardsWeb.CardSetView do
     end
   end
 
+  defp get_creator_name(set) do
+    if Ecto.assoc_loaded?(set.card_group) do
+      set.card_group.user.name
+    else
+      nil
+    end
+  end
+
+  defp get_creator_id(set) do
+    if Ecto.assoc_loaded?(set.card_group) do
+      set.card_group.user_id
+    else
+      nil
+    end
+  end
+
   def render("index.json", %{card_sets: card_sets}) do
-    %{data: render_many(card_sets, CardSetView, "card_set.json")}
+    %{data: render_many(card_sets, CardSetView, "card_set_index.json")}
   end
 
   def render("show.json", %{card_set: card_set}) do
-    %{data: render_one(card_set, CardSetView, "card_set.json")}
+    %{data: render_one(card_set, CardSetView, "card_set_show.json")}
   end
 
-  def render("card_set.json", %{card_set: card_set}) do
+  def render("card_set_index.json", %{card_set: card_set}) do
     %{id: card_set.id,
       name: card_set.name,
       card_group_id: card_set.card_group_id,
-      cards: get_cards(card_set)
+      card_length: Enum.count(card_set.cards),
+      creator_name: get_creator_name(card_set)
+    }
+  end
+
+  def render("card_set_show.json", %{card_set: card_set}) do
+    %{id: card_set.id,
+      name: card_set.name,
+      creator_id: get_creator_id(card_set),
+      cards: get_cards(card_set),
     }
   end
 end
