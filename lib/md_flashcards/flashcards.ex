@@ -4,10 +4,12 @@ defmodule MdFlashcards.Flashcards do
   """
 
   import Ecto.Query, warn: false
+
   alias MdFlashcards.Repo
 
   alias MdFlashcards.Flashcards.CardGroup
   alias MdFlashcards.Flashcards.CardSet
+  alias MdFlashcards.Flashcards.Card
 
   @doc """
   Returns the list of card_groups.
@@ -123,18 +125,24 @@ defmodule MdFlashcards.Flashcards do
       [%CardSet{}, ...]
 
   """
-  def list_card_sets do
-    Repo.all from(
-      s in CardSet,
-      preload: [
-        :cards,
-        card_group: ^Ecto.Query.from(
-          g in CardGroup,
-          preload: [:user]
-        )
-      ]
-    )
-  end
+
+# TODO - consume offset and paginate
+def list_card_sets do
+  Repo.all from(
+    s in CardSet,
+    join: cards in assoc(s, :cards),
+    group_by: s.id,
+    having: count(cards) > 0,
+    limit: 50,
+    preload: [
+      :cards,
+      card_group: ^Ecto.Query.from(
+        g in CardGroup,
+        preload: [:user]
+      )
+    ]
+  )
+end
 
   @doc """
   Gets a single card_set.
@@ -150,7 +158,14 @@ defmodule MdFlashcards.Flashcards do
       ** (Ecto.NoResultsError)
 
   """
-  def get_card_set!(id), do: Repo.get!(CardSet, id) |> Repo.preload([:cards, :card_group])
+  def get_card_set!(id) do
+    cards_query = from c in Card, order_by: c.inserted_at
+    Repo.one from(
+      s in CardSet,
+      where: s.id == ^id,
+      preload: [:card_group, cards: ^cards_query]
+    )
+  end
 
   @doc """
   Creates a card_set.

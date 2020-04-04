@@ -12,13 +12,18 @@ defmodule MdFlashcardsWeb.Plugs.SetUser do
 
   def call(conn, _attrs) do
     user_id = get_session(conn, :user_id)
+    card_group_query = from(
+      g in CardGroup,
+      order_by: [desc: g.inserted_at],
+      preload: [:card_sets]
+    )
 
     cond do
       user = user_id && Repo.one from(
         u in User,
         where: u.id == ^user_id,
         preload: [
-          card_groups: ^Ecto.Query.from(c in CardGroup, preload: [:card_sets])
+          card_groups: ^card_group_query
         ]
       ) ->
         assign(conn, :user, user)
