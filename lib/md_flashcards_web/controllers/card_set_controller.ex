@@ -6,6 +6,8 @@ defmodule MdFlashcardsWeb.CardSetController do
 
   action_fallback MdFlashcardsWeb.FallbackController
 
+  plug MdFlashcardsWeb.Plugs.RequireAuth when action in [:create, :update, :delete]
+
   def index(conn, _params) do
     card_sets = Flashcards.list_card_sets()
     render(conn, "index.json", card_sets: card_sets)
