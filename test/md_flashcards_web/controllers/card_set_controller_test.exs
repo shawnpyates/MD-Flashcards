@@ -6,7 +6,7 @@ defmodule MdFlashcardsWeb.CardSetControllerTest do
   alias MdFlashcards.Accounts.User
 
   @create_attrs %{
-    name: "some name",
+    name: "some name"
   }
   @update_attrs %{
     name: "some updated name"

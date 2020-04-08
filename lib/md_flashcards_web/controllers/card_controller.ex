@@ -30,7 +30,6 @@ defmodule MdFlashcardsWeb.CardController do
   def update(conn, %{"id" => id, "card" => card_params}) do
     card = Flashcards.get_card!(id)
 
-
     with {:ok, %Card{} = card} <- Flashcards.update_card(card, card_params) do
       cards = Flashcards.list_cards(card.card_set_id)
       render(conn, "index.json", cards: cards)

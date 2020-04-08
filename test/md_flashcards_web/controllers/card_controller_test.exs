@@ -11,7 +11,7 @@ defmodule MdFlashcardsWeb.CardControllerTest do
   }
   @update_attrs %{
     answer: "some updated answer",
-    question: "some updated question",
+    question: "some updated question"
   }
   @invalid_attrs %{answer: nil, question: nil}
 
@@ -26,7 +26,7 @@ defmodule MdFlashcardsWeb.CardControllerTest do
     {:ok,
       conn:
         put_req_header(conn, "accept", "application/json")
-        |> assign(:user, %User{id: 1, email: "some email", name: "some name", provider: "some provider", token: "some token"})
+        |> assign(:user, %User{id: 1})
     }
   end
 
