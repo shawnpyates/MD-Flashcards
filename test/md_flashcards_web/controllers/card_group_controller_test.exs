@@ -20,10 +20,9 @@ defmodule MdFlashcardsWeb.CardGroupControllerTest do
 
   setup %{conn: conn} do
     {:ok,
-      conn:
-        put_req_header(conn, "accept", "application/json")
-        |> assign(:user, %User{id: 1})
-    }
+     conn:
+       put_req_header(conn, "accept", "application/json")
+       |> assign(:user, %User{id: 1})}
   end
 
   describe "index" do
@@ -55,8 +54,13 @@ defmodule MdFlashcardsWeb.CardGroupControllerTest do
   describe "update card_group" do
     setup [:create_card_group]
 
-    test "renders card_group when data is valid", %{conn: conn, card_group: %CardGroup{id: id} = card_group} do
-      conn = put(conn, Routes.card_group_path(conn, :update, card_group), card_group: @update_attrs)
+    test "renders card_group when data is valid", %{
+      conn: conn,
+      card_group: %CardGroup{id: id} = card_group
+    } do
+      conn =
+        put(conn, Routes.card_group_path(conn, :update, card_group), card_group: @update_attrs)
+
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
       conn = get(conn, Routes.card_group_path(conn, :show, id))
@@ -68,7 +72,9 @@ defmodule MdFlashcardsWeb.CardGroupControllerTest do
     end
 
     test "renders errors when data is invalid", %{conn: conn, card_group: card_group} do
-      conn = put(conn, Routes.card_group_path(conn, :update, card_group), card_group: @invalid_attrs)
+      conn =
+        put(conn, Routes.card_group_path(conn, :update, card_group), card_group: @invalid_attrs)
+
       assert json_response(conn, 422)["errors"] != %{}
     end
   end

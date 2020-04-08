@@ -24,10 +24,9 @@ defmodule MdFlashcardsWeb.CardControllerTest do
 
   setup %{conn: conn} do
     {:ok,
-      conn:
-        put_req_header(conn, "accept", "application/json")
-        |> assign(:user, %User{id: 1})
-    }
+     conn:
+       put_req_header(conn, "accept", "application/json")
+       |> assign(:user, %User{id: 1})}
   end
 
   describe "index" do

@@ -23,9 +23,6 @@ defmodule MdFlashcardsWeb.CardGroupView do
   end
 
   def render("card_group.json", %{card_group: card_group}) do
-    %{id: card_group.id,
-      name: card_group.name,
-      card_sets: get_sets(card_group)
-    }
+    %{id: card_group.id, name: card_group.name, card_sets: get_sets(card_group)}
   end
 end

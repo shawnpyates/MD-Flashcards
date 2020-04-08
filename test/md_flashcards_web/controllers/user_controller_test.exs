@@ -45,7 +45,7 @@ defmodule MdFlashcardsWeb.UserControllerTest do
                "id" => id,
                "email" => "some email",
                "name" => "some name",
-               "provider" => "some provider",
+               "provider" => "some provider"
              } = json_response(conn, 200)["data"]
     end
 

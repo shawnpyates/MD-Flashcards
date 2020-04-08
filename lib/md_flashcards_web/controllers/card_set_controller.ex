@@ -24,6 +24,7 @@ defmodule MdFlashcardsWeb.CardSetController do
 
   def show(conn, %{"id" => id}) do
     card_set = Flashcards.get_card_set!(id)
+
     conn
     |> render("show.json", card_set: card_set)
   end

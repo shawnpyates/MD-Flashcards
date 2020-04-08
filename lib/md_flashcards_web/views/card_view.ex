@@ -11,10 +11,6 @@ defmodule MdFlashcardsWeb.CardView do
   end
 
   def render("card.json", %{card: card}) do
-    %{id: card.id,
-      question: card.question,
-      answer: card.answer,
-      card_set_id: card.card_set_id
-    }
+    %{id: card.id, question: card.question, answer: card.answer, card_set_id: card.card_set_id}
   end
 end

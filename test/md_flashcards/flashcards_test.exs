@@ -44,13 +44,19 @@ defmodule MdFlashcards.FlashcardsTest do
 
     test "update_card_group/2 with valid data updates the card_group" do
       card_group = card_group_fixture()
-      assert {:ok, %CardGroup{} = card_group} = Flashcards.update_card_group(card_group, @update_attrs)
+
+      assert {:ok, %CardGroup{} = card_group} =
+               Flashcards.update_card_group(card_group, @update_attrs)
+
       assert card_group.name == "some updated name"
     end
 
     test "update_card_group/2 with invalid data returns error changeset" do
       card_group = card_group_fixture()
-      assert {:error, %Ecto.Changeset{}} = Flashcards.update_card_group(card_group, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Flashcards.update_card_group(card_group, @invalid_attrs)
+
       updated_card_group = card_group |> drop_card_sets()
       assert updated_card_group == Flashcards.get_card_group!(card_group.id) |> drop_card_sets()
     end
@@ -79,9 +85,11 @@ defmodule MdFlashcards.FlashcardsTest do
         attrs
         |> Enum.into(@valid_attrs)
         |> Flashcards.create_card_set()
+
       {:ok, _card} =
         %{question: "q", answer: "a", card_set_id: card_set.id}
         |> Flashcards.create_card()
+
       card_set
     end
 
@@ -147,10 +155,12 @@ defmodule MdFlashcards.FlashcardsTest do
     def card_fixture(attrs \\ %{}) do
       {:ok, card_set} = Flashcards.create_card_set(%{name: "x"})
       new_valid_attrs = @valid_attrs |> Map.put(:card_set_id, card_set.id)
+
       {:ok, card} =
         attrs
         |> Enum.into(new_valid_attrs)
         |> Flashcards.create_card()
+
       card
     end
 

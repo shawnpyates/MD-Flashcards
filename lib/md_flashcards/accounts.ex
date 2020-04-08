@@ -106,6 +106,7 @@ defmodule MdFlashcards.Accounts do
     case Repo.get_by(User, email: changeset.changes.email) do
       nil ->
         Repo.insert(changeset)
+
       user ->
         {:ok, user}
     end

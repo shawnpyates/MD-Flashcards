@@ -54,6 +54,7 @@ defmodule MdFlashcardsWeb.UserController do
       name: auth.info.name,
       provider: "github"
     }
+
     changeset = User.changeset(%User{}, user_attrs)
 
     signin(conn, changeset)
@@ -71,6 +72,7 @@ defmodule MdFlashcardsWeb.UserController do
         conn
         |> put_session(:user_id, user.id)
         |> redirect(external: "http://localhost:3000/")
+
       {:error, _reason} ->
         conn
         |> redirect(to: Routes.user_path(conn, :index))

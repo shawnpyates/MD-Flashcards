@@ -13,7 +13,6 @@ defmodule MdFlashcardsWeb.CardSetControllerTest do
   }
   @invalid_attrs %{name: nil}
 
-
   def fixture(:card_set) do
     {:ok, card_set} = Flashcards.create_card_set(@create_attrs)
     card_set
@@ -21,10 +20,9 @@ defmodule MdFlashcardsWeb.CardSetControllerTest do
 
   setup %{conn: conn} do
     {:ok,
-      conn:
-        put_req_header(conn, "accept", "application/json")
-        |> assign(:user, %User{id: 1})
-    }
+     conn:
+       put_req_header(conn, "accept", "application/json")
+       |> assign(:user, %User{id: 1})}
   end
 
   describe "index" do
@@ -57,7 +55,10 @@ defmodule MdFlashcardsWeb.CardSetControllerTest do
   describe "update card_set" do
     setup [:create_card_set]
 
-    test "renders card_set when data is valid", %{conn: conn, card_set: %CardSet{id: id} = card_set} do
+    test "renders card_set when data is valid", %{
+      conn: conn,
+      card_set: %CardSet{id: id} = card_set
+    } do
       conn = put(conn, Routes.card_set_path(conn, :update, card_set), card_set: @update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 

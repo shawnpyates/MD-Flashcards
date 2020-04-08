@@ -39,15 +39,16 @@ defmodule MdFlashcards.Flashcards do
 
   """
   def get_card_group!(id) do
-    query = from(
-      CardGroup,
-      preload: [
-        card_sets: ^Ecto.Query.from(s in CardSet, preload: [:cards])
-      ]
-    )
+    query =
+      from(
+        CardGroup,
+        preload: [
+          card_sets: ^Ecto.Query.from(s in CardSet, preload: [:cards])
+        ]
+      )
+
     Repo.get!(query, id)
   end
-
 
   @doc """
   Creates a card_group.
@@ -126,35 +127,39 @@ defmodule MdFlashcards.Flashcards do
 
   """
 
-def list_card_sets(cursor_after, substring_to_match) do
-  query = from(
-    s in CardSet,
-    where: ilike(s.name, ^"%#{substring_to_match}%"),
-    join: cards in assoc(s, :cards),
-    group_by: s.id,
-    having: count(cards) > 0,
-    order_by: [desc: :inserted_at],
-    preload: [
-      :cards,
-      card_group: ^Ecto.Query.from(
-        g in CardGroup,
-        preload: [:user]
+  def list_card_sets(cursor_after, substring_to_match) do
+    query =
+      from(
+        s in CardSet,
+        where: ilike(s.name, ^"%#{substring_to_match}%"),
+        join: cards in assoc(s, :cards),
+        group_by: s.id,
+        having: count(cards) > 0,
+        order_by: [desc: :inserted_at],
+        preload: [
+          :cards,
+          card_group:
+            ^Ecto.Query.from(
+              g in CardGroup,
+              preload: [:user]
+            )
+        ]
       )
-    ]
-  )
-  case cursor_after do
-    "0" ->
-      Repo.paginate(query, cursor_fields: [:inserted_at, :id], limit: 50, sort_direction: :desc)
-    _ ->
-      Repo.paginate(
-        query,
-        after: cursor_after,
-        cursor_fields: [:inserted_at, :id],
-        limit: 50,
-        sort_direction: :desc
-      )
+
+    case cursor_after do
+      "0" ->
+        Repo.paginate(query, cursor_fields: [:inserted_at, :id], limit: 50, sort_direction: :desc)
+
+      _ ->
+        Repo.paginate(
+          query,
+          after: cursor_after,
+          cursor_fields: [:inserted_at, :id],
+          limit: 50,
+          sort_direction: :desc
+        )
+    end
   end
-end
 
   @doc """
   Gets a single card_set.
@@ -172,10 +177,13 @@ end
   """
   def get_card_set!(id) do
     cards_query = from c in Card, order_by: c.inserted_at
-    main_query = from(
-      CardSet,
-      preload: [:card_group, cards: ^cards_query]
-    )
+
+    main_query =
+      from(
+        CardSet,
+        preload: [:card_group, cards: ^cards_query]
+      )
+
     Repo.get!(main_query, id)
   end
 

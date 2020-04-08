@@ -41,7 +41,8 @@ defmodule MdFlashcardsWeb.CardSetView do
   end
 
   def render("card_set_index.json", %{card_set: card_set}) do
-    %{id: card_set.id,
+    %{
+      id: card_set.id,
       name: card_set.name,
       card_group_id: card_set.card_group_id,
       inserted_at: card_set.inserted_at,
@@ -51,10 +52,11 @@ defmodule MdFlashcardsWeb.CardSetView do
   end
 
   def render("card_set_show.json", %{card_set: card_set}) do
-    %{id: card_set.id,
+    %{
+      id: card_set.id,
       name: card_set.name,
       creator_id: get_creator_id(card_set),
-      cards: get_cards(card_set),
+      cards: get_cards(card_set)
     }
   end
 end

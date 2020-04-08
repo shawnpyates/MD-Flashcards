@@ -6,8 +6,18 @@ defmodule MdFlashcards.AccountsTest do
   describe "users" do
     alias MdFlashcards.Accounts.User
 
-    @valid_attrs %{email: "some email", name: "some name", provider: "some provider", token: "some token"}
-    @update_attrs %{email: "some updated email", name: "some updated name", provider: "some updated provider", token: "some updated token"}
+    @valid_attrs %{
+      email: "some email",
+      name: "some name",
+      provider: "some provider",
+      token: "some token"
+    }
+    @update_attrs %{
+      email: "some updated email",
+      name: "some updated name",
+      provider: "some updated provider",
+      token: "some updated token"
+    }
     @invalid_attrs %{email: nil, name: nil, provider: nil, token: nil}
 
     def user_fixture(attrs \\ %{}) do
