@@ -126,14 +126,14 @@ defmodule MdFlashcards.Flashcards do
 
   """
 
-# TODO - consume offset and paginate
-def list_card_sets do
-  Repo.all from(
+def list_card_sets(cursor_after, substring_to_match) do
+  query = from(
     s in CardSet,
+    where: ilike(s.name, ^"%#{substring_to_match}%"),
     join: cards in assoc(s, :cards),
     group_by: s.id,
     having: count(cards) > 0,
-    limit: 50,
+    order_by: [desc: :inserted_at],
     preload: [
       :cards,
       card_group: ^Ecto.Query.from(
@@ -142,6 +142,18 @@ def list_card_sets do
       )
     ]
   )
+  case cursor_after do
+    "0" ->
+      Repo.paginate(query, cursor_fields: [:inserted_at, :id], limit: 50, sort_direction: :desc)
+    _ ->
+      Repo.paginate(
+        query,
+        after: cursor_after,
+        cursor_fields: [:inserted_at, :id],
+        limit: 50,
+        sort_direction: :desc
+      )
+  end
 end
 
   @doc """

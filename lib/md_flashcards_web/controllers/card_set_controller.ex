@@ -8,9 +8,9 @@ defmodule MdFlashcardsWeb.CardSetController do
 
   plug MdFlashcardsWeb.Plugs.RequireAuth when action in [:create, :update, :delete]
 
-  def index(conn, _params) do
-    card_sets = Flashcards.list_card_sets()
-    render(conn, "index.json", card_sets: card_sets)
+  def index(conn, %{"cursor_after" => cursor_after, "match" => match}) do
+    result = Flashcards.list_card_sets(cursor_after, match)
+    render(conn, "index.json", result: result)
   end
 
   def create(conn, %{"card_set" => card_set_params}) do

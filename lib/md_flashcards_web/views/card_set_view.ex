@@ -29,8 +29,11 @@ defmodule MdFlashcardsWeb.CardSetView do
     end
   end
 
-  def render("index.json", %{card_sets: card_sets}) do
-    %{data: render_many(card_sets, CardSetView, "card_set_index.json")}
+  def render("index.json", %{result: %{entries: card_sets, metadata: metadata}}) do
+    %{
+      data: render_many(card_sets, CardSetView, "card_set_index.json"),
+      metadata: %{cursor_after: metadata.after}
+    }
   end
 
   def render("show.json", %{card_set: card_set}) do
@@ -41,6 +44,7 @@ defmodule MdFlashcardsWeb.CardSetView do
     %{id: card_set.id,
       name: card_set.name,
       card_group_id: card_set.card_group_id,
+      inserted_at: card_set.inserted_at,
       card_length: Enum.count(card_set.cards),
       creator_name: get_creator_name(card_set)
     }
