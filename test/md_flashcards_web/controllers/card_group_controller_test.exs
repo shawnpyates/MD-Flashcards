@@ -3,6 +3,7 @@ defmodule MdFlashcardsWeb.CardGroupControllerTest do
 
   alias MdFlashcards.Flashcards
   alias MdFlashcards.Flashcards.CardGroup
+  alias MdFlashcards.Accounts.User
 
   @create_attrs %{
     name: "some name"
@@ -18,12 +19,16 @@ defmodule MdFlashcardsWeb.CardGroupControllerTest do
   end
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    {:ok,
+      conn:
+        put_req_header(conn, "accept", "application/json")
+        |> assign(:user, %User{id: 1})
+    }
   end
 
   describe "index" do
     test "lists all card_groups", %{conn: conn} do
-      conn = get(conn, Routes.card_group_path(conn, :index))
+      conn = get(conn, Routes.user_card_group_path(conn, :index, 1))
       assert json_response(conn, 200)["data"] == []
     end
   end

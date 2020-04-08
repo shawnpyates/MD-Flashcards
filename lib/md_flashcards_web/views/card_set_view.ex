@@ -23,7 +23,7 @@ defmodule MdFlashcardsWeb.CardSetView do
 
   defp get_creator_id(set) do
     if Ecto.assoc_loaded?(set.card_group) do
-      set.card_group.user_id
+      set.card_group && set.card_group.user_id
     else
       nil
     end

@@ -2,7 +2,7 @@ use Mix.Config
 
 # Configure your database
 config :md_flashcards, MdFlashcards.Repo,
-  username: "postgres",
+  username: "shawnyates",
   password: "postgres",
   database: "md_flashcards_test",
   hostname: "localhost",

@@ -19,14 +19,18 @@ defmodule MdFlashcards.FlashcardsTest do
       card_group
     end
 
+    defp drop_card_sets(record) do
+      record |> Map.from_struct() |> Map.drop([:card_sets])
+    end
+
     test "list_card_groups/0 returns all card_groups" do
       card_group = card_group_fixture()
       assert Flashcards.list_card_groups() == [card_group]
     end
 
     test "get_card_group!/1 returns the card_group with given id" do
-      card_group = card_group_fixture()
-      assert Flashcards.get_card_group!(card_group.id) == card_group
+      card_group = card_group_fixture() |> drop_card_sets()
+      assert Flashcards.get_card_group!(card_group.id) |> drop_card_sets() == card_group
     end
 
     test "create_card_group/1 with valid data creates a card_group" do
@@ -47,7 +51,8 @@ defmodule MdFlashcards.FlashcardsTest do
     test "update_card_group/2 with invalid data returns error changeset" do
       card_group = card_group_fixture()
       assert {:error, %Ecto.Changeset{}} = Flashcards.update_card_group(card_group, @invalid_attrs)
-      assert card_group == Flashcards.get_card_group!(card_group.id)
+      updated_card_group = card_group |> drop_card_sets()
+      assert updated_card_group == Flashcards.get_card_group!(card_group.id) |> drop_card_sets()
     end
 
     test "delete_card_group/1 deletes the card_group" do
@@ -74,18 +79,27 @@ defmodule MdFlashcards.FlashcardsTest do
         attrs
         |> Enum.into(@valid_attrs)
         |> Flashcards.create_card_set()
-
+      {:ok, _card} =
+        %{question: "q", answer: "a", card_set_id: card_set.id}
+        |> Flashcards.create_card()
       card_set
     end
 
-    test "list_card_sets/0 returns all card_sets" do
-      card_set = card_set_fixture()
-      assert Flashcards.list_card_sets() == [card_set]
+    defp drop_properties(record) do
+      record |> Map.from_struct() |> Map.drop([:card_group, :cards])
+    end
+
+    test "list_card_sets/2 returns all card_sets" do
+      card_set = card_set_fixture() |> drop_properties()
+      result = Flashcards.list_card_sets("0", "")
+      updated_result = List.first(result.entries) |> drop_properties()
+      assert [updated_result] == [card_set]
     end
 
     test "get_card_set!/1 returns the card_set with given id" do
-      card_set = card_set_fixture()
-      assert Flashcards.get_card_set!(card_set.id) == card_set
+      card_set = card_set_fixture() |> drop_properties()
+      result = Flashcards.get_card_set!(card_set.id) |> drop_properties()
+      assert result == card_set
     end
 
     test "create_card_set/1 with valid data creates a card_set" do
@@ -106,7 +120,9 @@ defmodule MdFlashcards.FlashcardsTest do
     test "update_card_set/2 with invalid data returns error changeset" do
       card_set = card_set_fixture()
       assert {:error, %Ecto.Changeset{}} = Flashcards.update_card_set(card_set, @invalid_attrs)
-      assert card_set == Flashcards.get_card_set!(card_set.id)
+      updated_card_set = card_set |> drop_properties()
+      result = Flashcards.get_card_set!(card_set.id) |> drop_properties()
+      assert updated_card_set == result
     end
 
     test "delete_card_set/1 deletes the card_set" do
@@ -129,17 +145,18 @@ defmodule MdFlashcards.FlashcardsTest do
     @invalid_attrs %{answer: nil, question: nil}
 
     def card_fixture(attrs \\ %{}) do
+      {:ok, card_set} = Flashcards.create_card_set(%{name: "x"})
+      new_valid_attrs = @valid_attrs |> Map.put(:card_set_id, card_set.id)
       {:ok, card} =
         attrs
-        |> Enum.into(@valid_attrs)
+        |> Enum.into(new_valid_attrs)
         |> Flashcards.create_card()
-
       card
     end
 
     test "list_cards/0 returns all cards" do
       card = card_fixture()
-      assert Flashcards.list_cards() == [card]
+      assert Flashcards.list_cards(card.card_set_id) == [card]
     end
 
     test "get_card!/1 returns the card with given id" do

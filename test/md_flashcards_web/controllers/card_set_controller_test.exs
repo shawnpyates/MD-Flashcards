@@ -3,14 +3,16 @@ defmodule MdFlashcardsWeb.CardSetControllerTest do
 
   alias MdFlashcards.Flashcards
   alias MdFlashcards.Flashcards.CardSet
+  alias MdFlashcards.Accounts.User
 
   @create_attrs %{
-    name: "some name"
+    name: "some name",
   }
   @update_attrs %{
     name: "some updated name"
   }
   @invalid_attrs %{name: nil}
+
 
   def fixture(:card_set) do
     {:ok, card_set} = Flashcards.create_card_set(@create_attrs)
@@ -18,12 +20,17 @@ defmodule MdFlashcardsWeb.CardSetControllerTest do
   end
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    {:ok,
+      conn:
+        put_req_header(conn, "accept", "application/json")
+        |> assign(:user, %User{id: 1})
+    }
   end
 
   describe "index" do
     test "lists all card_sets", %{conn: conn} do
-      conn = get(conn, Routes.card_set_path(conn, :index))
+      attrs = %{"cursor_after" => "0", "match" => ""}
+      conn = get(conn, Routes.card_set_path(conn, :index, attrs))
       assert json_response(conn, 200)["data"] == []
     end
   end

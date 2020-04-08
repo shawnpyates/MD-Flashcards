@@ -39,13 +39,13 @@ defmodule MdFlashcards.Flashcards do
 
   """
   def get_card_group!(id) do
-    Repo.one from(
-      g in CardGroup,
-      where: g.id == ^id,
+    query = from(
+      CardGroup,
       preload: [
         card_sets: ^Ecto.Query.from(s in CardSet, preload: [:cards])
       ]
     )
+    Repo.get!(query, id)
   end
 
 
@@ -172,11 +172,11 @@ end
   """
   def get_card_set!(id) do
     cards_query = from c in Card, order_by: c.inserted_at
-    Repo.one from(
-      s in CardSet,
-      where: s.id == ^id,
+    main_query = from(
+      CardSet,
       preload: [:card_group, cards: ^cards_query]
     )
+    Repo.get!(main_query, id)
   end
 
   @doc """
