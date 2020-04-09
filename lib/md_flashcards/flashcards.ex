@@ -135,7 +135,7 @@ defmodule MdFlashcards.Flashcards do
         join: cards in assoc(s, :cards),
         group_by: s.id,
         having: count(cards) > 0,
-        order_by: [desc: :inserted_at],
+        order_by: [desc: :id],
         preload: [
           :cards,
           card_group:
@@ -148,13 +148,13 @@ defmodule MdFlashcards.Flashcards do
 
     case cursor_after do
       "0" ->
-        Repo.paginate(query, cursor_fields: [:inserted_at, :id], limit: 50, sort_direction: :desc)
+        Repo.paginate(query, cursor_fields: [:id], limit: 50, sort_direction: :desc)
 
       _ ->
         Repo.paginate(
           query,
           after: cursor_after,
-          cursor_fields: [:inserted_at, :id],
+          cursor_fields: [:id],
           limit: 50,
           sort_direction: :desc
         )
