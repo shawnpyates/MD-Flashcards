@@ -28,5 +28,3 @@ md_flashcards-*.tar
 /priv/static/
 
 .elixir_ls
-
-.env
