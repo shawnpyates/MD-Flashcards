@@ -43,7 +43,7 @@ defmodule MdFlashcardsWeb.Endpoint do
   plug Plug.Session, @session_options
 
   plug Corsica,
-    origins: "http://localhost:3000",
+    origins: System.get_env("ALLOWED_ORIGIN_URL"),
     allow_credentials: true,
     allow_headers: ["content-type"]
 
