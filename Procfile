@@ -1,1 +1,1 @@
-web: MIX_ENV=prod mix ecto.migrate && mix phx.server
+web: MIX_ENV=prod mix ecto.migrate && mix run priv/repo/database_seeder.ex && mix phx.server
