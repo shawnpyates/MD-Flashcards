@@ -7,7 +7,8 @@ defmodule MdFlashcardsWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_md_flashcards_key",
-    signing_salt: "46U/+cq7"
+    signing_salt: "46U/+cq7",
+    extra: "SameSite=None"
   ]
 
   socket "/socket", MdFlashcardsWeb.UserSocket,
