@@ -28,7 +28,7 @@ defmodule MdFlashcards.DatabaseSeeder do
       name: Faker.Lorem.sentence(2, ""),
       user_id: user_id
     }
-    random_times = Faker.random_between(2, 10)
+    random_times = Faker.random_between(2, 5)
     (1..random_times)
       |> Enum.each(fn _ -> MdFlashcards.DatabaseSeeder.create_card_set(group.id) end)
   end
@@ -46,4 +46,4 @@ defmodule MdFlashcards.DatabaseSeeder do
   end
 end
 
-(1..50) |> Enum.each(fn _ -> MdFlashcards.DatabaseSeeder.create_user() end)
+(1..15) |> Enum.each(fn _ -> MdFlashcards.DatabaseSeeder.create_user() end)
