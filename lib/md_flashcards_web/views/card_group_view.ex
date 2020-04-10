@@ -15,14 +15,23 @@ defmodule MdFlashcardsWeb.CardGroupView do
   end
 
   def render("index.json", %{card_groups: card_groups}) do
-    %{data: render_many(card_groups, CardGroupView, "card_group.json")}
+    %{data: render_many(card_groups, CardGroupView, "card_group_index.json")}
   end
 
   def render("show.json", %{card_group: card_group}) do
-    %{data: render_one(card_group, CardGroupView, "card_group.json")}
+    %{data: render_one(card_group, CardGroupView, "card_group_show.json")}
   end
 
-  def render("card_group.json", %{card_group: card_group}) do
+  def render("card_group_index.json", %{card_group: card_group}) do
+    %{
+      id: card_group.id,
+      name: card_group.name,
+      inserted_at: card_group.inserted_at,
+      card_set_length: Enum.count(card_group.card_sets),
+    }
+  end
+
+  def render("card_group_show.json", %{card_group: card_group}) do
     %{id: card_group.id, name: card_group.name, card_sets: get_sets(card_group)}
   end
 end
