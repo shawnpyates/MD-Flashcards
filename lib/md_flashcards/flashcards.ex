@@ -20,8 +20,14 @@ defmodule MdFlashcards.Flashcards do
       [%CardGroup{}, ...]
 
   """
-  def list_card_groups do
-    Repo.all(CardGroup)
+  def list_card_groups(user_id) do
+    query = from(
+      g in CardGroup,
+      where: g.user_id == ^user_id,
+      order_by: [desc: g.inserted_at],
+      preload: [:card_sets]
+    )
+    Repo.all(query)
   end
 
   @doc """
