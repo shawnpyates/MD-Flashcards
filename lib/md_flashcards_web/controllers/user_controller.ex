@@ -63,7 +63,7 @@ defmodule MdFlashcardsWeb.UserController do
   def signout(conn, _attrs) do
     conn
     |> configure_session(drop: true)
-    |> redirect(external: "https://md-flashcards-ui.herokuapp.com")
+    |> redirect(external: "http://localhost:3000")
   end
 
   defp signin(conn, changeset) do
@@ -71,7 +71,7 @@ defmodule MdFlashcardsWeb.UserController do
       {:ok, user} ->
         conn
         |> put_session(:user_id, user.id)
-        |> redirect(external: "https://md-flashcards-ui.herokuapp.com")
+        |> redirect(external: "http://localhost:3000")
 
       {:error, _reason} ->
         conn
