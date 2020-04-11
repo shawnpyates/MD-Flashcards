@@ -2,6 +2,7 @@ defmodule MdFlashcards.FlashcardsTest do
   use MdFlashcards.DataCase
 
   alias MdFlashcards.Flashcards
+  alias MdFlashcards.Accounts
 
   describe "card_groups" do
     alias MdFlashcards.Flashcards.CardGroup
@@ -24,8 +25,9 @@ defmodule MdFlashcards.FlashcardsTest do
     end
 
     test "list_card_groups/0 returns all card_groups" do
-      card_group = card_group_fixture()
-      assert Flashcards.list_card_groups() == [card_group]
+      user = Accounts.create_user(%{ name: "x", provider: "y", token: "z", email: "a@b.com"})
+      card_group = card_group_fixture(%{user_id: user.id})
+      assert Flashcards.list_card_groups(user.id) == [card_group]
     end
 
     test "get_card_group!/1 returns the card_group with given id" do
