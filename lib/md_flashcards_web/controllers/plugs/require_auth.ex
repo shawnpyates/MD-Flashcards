@@ -7,12 +7,9 @@ defmodule MdFlashcardsWeb.Plugs.RequireAuth do
   end
 
   def call(conn, _attrs) do
-    if conn.assigns[:user] do
-      conn
-    else
-      conn
-      |> send_resp(401, "Unauthorized")
-      |> halt()
+    cond do
+      conn.assigns[:user] -> conn
+      true -> conn |> send_resp(401, "Unauthorized") |> halt()
     end
   end
 end

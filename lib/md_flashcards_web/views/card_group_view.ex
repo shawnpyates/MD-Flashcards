@@ -3,14 +3,14 @@ defmodule MdFlashcardsWeb.CardGroupView do
   alias MdFlashcardsWeb.CardGroupView
 
   defp get_sets(group) do
-    if Ecto.assoc_loaded?(group.card_sets) do
-      Enum.map(group.card_sets, fn set ->
-        Map.from_struct(set)
-        |> Map.put(:card_length, Enum.count(set.cards))
-        |> Map.drop([:__meta__, :card_group, :cards])
-      end)
-    else
-      nil
+    cond do
+      Ecto.assoc_loaded?(group.card_sets) ->
+        Enum.map(group.card_sets, fn set ->
+          Map.from_struct(set)
+          |> Map.put(:card_length, Enum.count(set.cards))
+          |> Map.drop([:__meta__, :card_group, :cards])
+        end)
+      true -> nil
     end
   end
 
