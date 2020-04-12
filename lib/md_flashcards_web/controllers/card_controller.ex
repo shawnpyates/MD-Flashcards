@@ -6,10 +6,10 @@ defmodule MdFlashcardsWeb.CardController do
 
   action_fallback MdFlashcardsWeb.FallbackController
 
-  plug MdFlashcardsWeb.Plugs.RequireAuth when action in [:create, :update, :delete]
+  plug MdFlashcardsWeb.Plugs.RequireAuth when action not in [:get_by_card_set]
 
-  def index(conn, _params) do
-    cards = Flashcards.list_cards(conn.params["card_set_id"])
+  def get_by_card_set(conn, _params) do
+    cards = Flashcards.list_cards_by_card_set(conn.params["card_set_id"])
     render(conn, "index.json", cards: cards)
   end
 
@@ -21,17 +21,11 @@ defmodule MdFlashcardsWeb.CardController do
     end
   end
 
-  @spec show(Plug.Conn.t(), map) :: Plug.Conn.t()
-  def show(conn, %{"id" => id}) do
-    card = Flashcards.get_card!(id)
-    render(conn, "show.json", card: card)
-  end
-
   def update(conn, %{"id" => id, "card" => card_params}) do
     card = Flashcards.get_card!(id)
 
     with {:ok, %Card{} = card} <- Flashcards.update_card(card, card_params) do
-      cards = Flashcards.list_cards(card.card_set_id)
+      cards = Flashcards.list_cards_by_card_set(card.card_set_id)
       render(conn, "index.json", cards: cards)
     end
   end
@@ -40,7 +34,7 @@ defmodule MdFlashcardsWeb.CardController do
     card = Flashcards.get_card!(id)
 
     with {:ok, %Card{}} <- Flashcards.delete_card(card) do
-      cards = Flashcards.list_cards(card.card_set_id)
+      cards = Flashcards.list_cards_by_card_set(card.card_set_id)
       render(conn, "index.json", cards: cards)
     end
   end

@@ -8,8 +8,8 @@ defmodule MdFlashcardsWeb.CardGroupController do
 
   plug MdFlashcardsWeb.Plugs.RequireAuth when action in [:create, :update, :delete]
 
-  def index(conn, %{"user_id" => user_id}) do
-    card_groups = Flashcards.list_card_groups(user_id)
+  def list_by_user(conn, %{"user_id" => user_id}) do
+    card_groups = Flashcards.list_card_groups_by_user(user_id)
     render(conn, "index.json", card_groups: card_groups)
   end
 

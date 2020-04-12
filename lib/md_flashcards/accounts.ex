@@ -9,19 +9,6 @@ defmodule MdFlashcards.Accounts do
   alias MdFlashcards.Accounts.User
 
   @doc """
-  Returns the list of users.
-
-  ## Examples
-
-      iex> list_users()
-      [%User{}, ...]
-
-  """
-  def list_users do
-    Repo.all(User)
-  end
-
-  @doc """
   Gets a single user.
 
   Raises `Ecto.NoResultsError` if the User does not exist.
@@ -87,19 +74,6 @@ defmodule MdFlashcards.Accounts do
   """
   def delete_user(%User{} = user) do
     Repo.delete(user)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking user changes.
-
-  ## Examples
-
-      iex> change_user(user)
-      %Ecto.Changeset{source: %User{}}
-
-  """
-  def change_user(%User{} = user) do
-    User.changeset(user, %{})
   end
 
   def insert_or_update_user(changeset) do
