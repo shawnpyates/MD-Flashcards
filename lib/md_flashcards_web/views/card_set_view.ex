@@ -9,7 +9,9 @@ defmodule MdFlashcardsWeb.CardSetView do
           Map.from_struct(card)
           |> Map.drop([:__meta__, :card_set])
         end)
-      true -> nil
+
+      true ->
+        nil
     end
   end
 

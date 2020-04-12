@@ -1,9 +1,7 @@
 defmodule MdFlashcards.DatabaseSeeder do
   alias MdFlashcards.Repo
   alias MdFlashcards.Accounts.User
-  alias MdFlashcards.Flashcards.CardGroup
-  alias MdFlashcards.Flashcards.CardSet
-  alias MdFlashcards.Flashcards.Card
+  alias MdFlashcards.Flashcards.{CardGroup, CardSet, Card}
 
   def create_card(set_id) do
     Repo.insert! %Card{

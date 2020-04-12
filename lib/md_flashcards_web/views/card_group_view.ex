@@ -10,7 +10,9 @@ defmodule MdFlashcardsWeb.CardGroupView do
           |> Map.put(:card_length, Enum.count(set.cards))
           |> Map.drop([:__meta__, :card_group, :cards])
         end)
-      true -> nil
+
+      true ->
+        nil
     end
   end
 
@@ -27,7 +29,7 @@ defmodule MdFlashcardsWeb.CardGroupView do
       id: card_group.id,
       name: card_group.name,
       inserted_at: card_group.inserted_at,
-      card_set_length: Enum.count(card_group.card_sets),
+      card_set_length: Enum.count(card_group.card_sets)
     }
   end
 

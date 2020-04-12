@@ -1,16 +1,7 @@
 defmodule MdFlashcardsWeb.Router do
   use MdFlashcardsWeb, :router
 
-  # alias MdFlashcards.Accounts.User
-  # alias MdFlashcards.Repo
-
   pipeline :api do
-    plug :accepts, ["json"]
-    plug :fetch_session
-    plug MdFlashcardsWeb.Plugs.SetUser
-  end
-
-  pipeline :auth do
     plug :accepts, ["json"]
     plug :fetch_session
     plug MdFlashcardsWeb.Plugs.SetUser
@@ -21,21 +12,21 @@ defmodule MdFlashcardsWeb.Router do
 
     get "/current_user", UserController, :get_current
 
-    resources "/users", UserController, except: [:new, :edit] do
-      get "/card_groups", CardGroupController, :index
+    resources "/users", UserController, only: [:create, :update, :delete] do
+      get "/card_groups", CardGroupController, :list_by_user
     end
 
     resources "/card_groups", CardGroupController, except: [:index, :new, :edit]
 
     resources "/card_sets", CardSetController, except: [:new, :edit] do
-      get "/cards", CardController, :index
+      get "/cards", CardController, :get_by_card_set
     end
 
-    resources "/cards", CardController, except: [:index, :new, :edit]
+    resources "/cards", CardController, only: [:create, :update, :delete]
   end
 
   scope "/auth", MdFlashcardsWeb do
-    pipe_through :auth
+    pipe_through :api
 
     get "/signout", UserController, :signout
 
