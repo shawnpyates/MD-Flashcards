@@ -3,6 +3,7 @@ defmodule MdFlashcards.FlashcardsTest do
 
   alias MdFlashcards.Flashcards
   alias MdFlashcards.Accounts
+  alias MdFlashcards.Accounts.User
 
   describe "card_groups" do
     alias MdFlashcards.Flashcards.CardGroup
@@ -12,11 +13,8 @@ defmodule MdFlashcards.FlashcardsTest do
     @invalid_attrs %{name: nil}
 
     def card_group_fixture(attrs \\ %{}) do
-      {:ok, card_group} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Flashcards.create_card_group()
-
+      {:ok, %CardGroup{} = card_group} =
+        Map.merge(attrs, @valid_attrs)|> Flashcards.create_card_group()
       card_group
     end
 
@@ -25,9 +23,11 @@ defmodule MdFlashcards.FlashcardsTest do
     end
 
     test "list_card_groups/0 returns all card_groups" do
-      user = Accounts.create_user(%{ name: "x", provider: "y", token: "z", email: "a@b.com"})
-      card_group = card_group_fixture(%{user_id: user.id})
-      assert Flashcards.list_card_groups(user.id) == [card_group]
+      user_params = %{ name: "x", provider: "y", token: "z", email: "a@b.com"}
+      with {:ok, %User{} = user} <- Accounts.create_user(user_params) do
+        card_group = card_group_fixture(%{user_id: user.id}) |> drop_card_sets()
+        assert hd(Flashcards.list_card_groups(user.id)) |> drop_card_sets() == card_group
+      end
     end
 
     test "get_card_group!/1 returns the card_group with given id" do
