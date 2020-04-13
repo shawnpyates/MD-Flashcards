@@ -25,9 +25,9 @@ defmodule MdFlashcardsWeb.CardGroupControllerTest do
        |> assign(:user, %User{id: 1})}
   end
 
-  describe "index" do
+  describe "list_by_user" do
     test "lists all card_groups", %{conn: conn} do
-      conn = get(conn, Routes.user_card_group_path(conn, :index, 1))
+      conn = get(conn, Routes.user_card_group_path(conn, :list_by_user, 1))
       assert json_response(conn, 200)["data"] == []
     end
   end

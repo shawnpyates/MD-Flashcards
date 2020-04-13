@@ -26,7 +26,7 @@ defmodule MdFlashcards.FlashcardsTest do
       user_params = %{ name: "x", provider: "y", token: "z", email: "a@b.com"}
       with {:ok, %User{} = user} <- Accounts.create_user(user_params) do
         card_group = card_group_fixture(%{user_id: user.id}) |> drop_card_sets()
-        assert hd(Flashcards.list_card_groups(user.id)) |> drop_card_sets() == card_group
+        assert hd(Flashcards.list_card_groups_by_user(user.id)) |> drop_card_sets() == card_group
       end
     end
 
@@ -102,7 +102,7 @@ defmodule MdFlashcards.FlashcardsTest do
     test "list_card_sets/2 returns all card_sets" do
       card_set = card_set_fixture() |> drop_properties()
       result = Flashcards.list_card_sets("0", "")
-      updated_result = List.first(result.entries) |> drop_properties()
+      updated_result = hd(result.entries) |> drop_properties()
       assert [updated_result] == [card_set]
     end
 
@@ -166,9 +166,9 @@ defmodule MdFlashcards.FlashcardsTest do
       card
     end
 
-    test "list_cards/0 returns all cards" do
+    test "list_cards_by_card_set/1 returns all cards" do
       card = card_fixture()
-      assert Flashcards.list_cards(card.card_set_id) == [card]
+      assert Flashcards.list_cards_by_card_set(card.card_set_id) == [card]
     end
 
     test "get_card!/1 returns the card with given id" do

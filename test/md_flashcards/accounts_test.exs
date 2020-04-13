@@ -33,11 +33,6 @@ defmodule MdFlashcards.AccountsTest do
       record |> Map.from_struct() |> Map.drop([:card_groups])
     end
 
-    test "list_users/0 returns all users" do
-      user = user_fixture()
-      assert Accounts.list_users() == [user]
-    end
-
     test "get_user!/1 returns the user with given id" do
       user = user_fixture() |> drop_card_groups()
       fetched_user = Accounts.get_user!(user.id) |> drop_card_groups()

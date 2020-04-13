@@ -64,7 +64,7 @@ defmodule MdFlashcardsWeb.UserController do
 
       {:error, _reason} ->
         conn
-        |> redirect(to: Routes.user_path(conn, :index))
+        |> redirect(external: "https://md-flashcards-ui.herokuapp.com")
     end
   end
 end
