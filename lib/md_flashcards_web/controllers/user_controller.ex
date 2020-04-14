@@ -65,7 +65,7 @@ defmodule MdFlashcardsWeb.UserController do
 
       {:error, _reason} ->
         conn
-        |> redirect(to: Routes.user_path(conn, :index))
+        |> redirect(external: "http://localhost:3000")
     end
   end
 end
