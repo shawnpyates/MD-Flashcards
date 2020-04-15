@@ -17,7 +17,6 @@ defmodule MdFlashcardsWeb.CardGroupController do
     with {:ok, %CardGroup{} = card_group} <- Flashcards.create_card_group(card_group_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", Routes.card_group_path(conn, :show, card_group))
       |> render("show.json", card_group: card_group)
     end
   end

@@ -41,7 +41,7 @@ defmodule MdFlashcardsWeb.UserController do
       token: auth.credentials.token,
       email: auth.info.email,
       name: auth.info.name,
-      provider: "github"
+      provider: auth.provider
     }
 
     changeset = User.changeset(%User{}, user_attrs)
