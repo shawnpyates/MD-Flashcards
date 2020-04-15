@@ -25,6 +25,7 @@ defmodule MdFlashcards.MixProject do
         :runtime_tools,
         :ueberauth,
         :ueberauth_github,
+        :ueberauth_google,
         :corsica,
         :faker
       ]
@@ -50,6 +51,7 @@ defmodule MdFlashcards.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:ueberauth, "~> 0.6"},
       {:ueberauth_github, "~> 0.7"},
+      {:ueberauth_google, "~> 0.8"},
       {:corsica, "~> 1.0"},
       {:paginator, "~> 0.6"},
       {:faker, "~> 0.13"}

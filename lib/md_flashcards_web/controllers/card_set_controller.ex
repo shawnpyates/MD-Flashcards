@@ -17,7 +17,6 @@ defmodule MdFlashcardsWeb.CardSetController do
     with {:ok, %CardSet{} = card_set} <- Flashcards.create_card_set(card_set_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", Routes.card_set_path(conn, :show, card_set))
       |> render("show.json", card_set: card_set)
     end
   end
