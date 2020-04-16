@@ -3,29 +3,29 @@ defmodule MdFlashcardsWeb.CardSetView do
   alias MdFlashcardsWeb.CardSetView
 
   defp get_cards(set) do
-    if Ecto.assoc_loaded?(set.cards) do
-      Enum.map(set.cards, fn card ->
-        Map.from_struct(card)
-        |> Map.drop([:__meta__, :card_set])
-      end)
-    else
-      nil
+    cond do
+      Ecto.assoc_loaded?(set.cards) ->
+        Enum.map(set.cards, fn card ->
+          Map.from_struct(card)
+          |> Map.drop([:__meta__, :card_set])
+        end)
+
+      true ->
+        nil
     end
   end
 
   defp get_creator_name(set) do
-    if Ecto.assoc_loaded?(set.card_group) do
-      set.card_group.user.name
-    else
-      nil
+    cond do
+      Ecto.assoc_loaded?(set.card_group) -> set.card_group.user.name
+      true -> nil
     end
   end
 
   defp get_creator_id(set) do
-    if Ecto.assoc_loaded?(set.card_group) do
-      set.card_group && set.card_group.user_id
-    else
-      nil
+    cond do
+      Ecto.assoc_loaded?(set.card_group) -> set.card_group && set.card_group.user_id
+      true -> nil
     end
   end
 

@@ -7,26 +7,26 @@ defmodule MdFlashcards.Flashcards do
 
   alias MdFlashcards.Repo
 
-  alias MdFlashcards.Flashcards.CardGroup
-  alias MdFlashcards.Flashcards.CardSet
-  alias MdFlashcards.Flashcards.Card
+  alias MdFlashcards.Flashcards.{CardGroup, CardSet, Card}
 
   @doc """
-  Returns the list of card_groups.
+  Returns the list of card_groups belonging to a specified user.
 
   ## Examples
 
-      iex> list_card_groups()
+      iex> list_card_groups(1)
       [%CardGroup{}, ...]
 
   """
-  def list_card_groups(user_id) do
-    query = from(
-      g in CardGroup,
-      where: g.user_id == ^user_id,
-      order_by: [desc: g.inserted_at],
-      preload: [:card_sets]
-    )
+  def list_card_groups_by_user(user_id) do
+    query =
+      from(
+        g in CardGroup,
+        where: g.user_id == ^user_id,
+        order_by: [desc: g.inserted_at],
+        preload: [:card_sets]
+      )
+
     Repo.all(query)
   end
 
@@ -49,7 +49,12 @@ defmodule MdFlashcards.Flashcards do
       from(
         CardGroup,
         preload: [
-          card_sets: ^Ecto.Query.from(s in CardSet, preload: [:cards])
+          card_sets:
+            ^Ecto.Query.from(
+              s in CardSet,
+              preload: [:cards],
+              order_by: s.inserted_at
+            )
         ]
       )
 
@@ -120,8 +125,6 @@ defmodule MdFlashcards.Flashcards do
   def change_card_group(%CardGroup{} = card_group) do
     CardGroup.changeset(card_group, %{})
   end
-
-  alias MdFlashcards.Flashcards.CardSet
 
   @doc """
   Returns the list of card_sets.
@@ -258,19 +261,17 @@ defmodule MdFlashcards.Flashcards do
     CardSet.changeset(card_set, %{})
   end
 
-  alias MdFlashcards.Flashcards.Card
-
   @doc """
-  Returns the list of cards.
+  Returns the list of cards belonging to a specified card set.
 
   ## Examples
 
-      iex> list_cards()
+      iex> list_cards_by_card_set(1)
       [%Card{}, ...]
 
   """
-  def list_cards(card_set_id) do
-    query = from c in Card, where: c.card_set_id == ^card_set_id
+  def list_cards_by_card_set(card_set_id) do
+    query = from c in Card, where: c.card_set_id == ^card_set_id, order_by: c.inserted_at
     Repo.all(query)
   end
 

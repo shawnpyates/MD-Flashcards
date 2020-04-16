@@ -15,7 +15,7 @@ defmodule MdFlashcardsWeb.UserView do
       id: user.id,
       name: user.name,
       email: user.email,
-      provider: user.provider,
+      provider: user.provider
     }
   end
 end

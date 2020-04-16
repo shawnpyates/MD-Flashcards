@@ -7,23 +7,12 @@ defmodule MdFlashcardsWeb.UserController do
 
   action_fallback MdFlashcardsWeb.FallbackController
 
-  def index(conn, _params) do
-    users = Accounts.list_users()
-    render(conn, "index.json", users: users)
-  end
-
   def create(conn, %{"user" => user_params}) do
     with {:ok, %User{} = user} <- Accounts.create_user(user_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("location", Routes.user_path(conn, :show, user))
       |> render("show.json", user: user)
     end
-  end
-
-  def show(conn, %{"id" => id}) do
-    user = Accounts.get_user!(id)
-    render(conn, "show.json", user: user)
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
@@ -55,7 +44,7 @@ defmodule MdFlashcardsWeb.UserController do
       token: auth.credentials.token,
       email: auth.info.email,
       name: auth.info.name,
-      provider: "github"
+      provider: auth.provider
     }
 
     changeset = User.changeset(%User{}, user_attrs)
@@ -64,21 +53,25 @@ defmodule MdFlashcardsWeb.UserController do
   end
 
   def signout(conn, _attrs) do
+    frontend_url = {System, :get_env, ["ALLOWED_ORIGIN_URL"]}
+    IO.puts(frontend_url)
     conn
     |> configure_session(drop: true)
-    |> redirect(external: "https://md-flashcards-ui.herokuapp.com")
+    |> redirect(external: frontend_url)
   end
 
   defp signin(conn, changeset) do
+    frontend_url = {System, :get_env, ["ALLOWED_ORIGIN_URL"]}
+    IO.puts(frontend_url)
     case Accounts.insert_or_update_user(changeset) do
       {:ok, user} ->
         conn
         |> put_session(:user_id, user.id)
-        |> redirect(external: "https://md-flashcards-ui.herokuapp.com")
+        |> redirect(external: frontend_url)
 
       {:error, _reason} ->
         conn
-        |> redirect(to: Routes.user_path(conn, :index))
+        |> redirect(external: frontend_url)
     end
   end
 end
