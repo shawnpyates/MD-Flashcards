@@ -50,7 +50,7 @@ defmodule MdFlashcardsWeb.UserController do
   end
 
   def signout(conn, _attrs) do
-    frontend_url = {System, :get_env, ["ALLOWED_ORIGIN_URL"]}
+    frontend_url = System.get_env("ALLOWED_ORIGIN_URL")
     IO.puts(frontend_url)
     conn
     |> configure_session(drop: true)
@@ -58,8 +58,7 @@ defmodule MdFlashcardsWeb.UserController do
   end
 
   defp signin(conn, changeset) do
-    frontend_url = {System, :get_env, ["ALLOWED_ORIGIN_URL"]}
-    IO.puts(frontend_url)
+    frontend_url = System.get_env("ALLOWED_ORIGIN_URL")
     case Accounts.insert_or_update_user(changeset) do
       {:ok, user} ->
         conn
