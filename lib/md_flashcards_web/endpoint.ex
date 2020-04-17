@@ -7,7 +7,8 @@ defmodule MdFlashcardsWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_md_flashcards_key",
-    signing_salt: "46U/+cq7"
+    signing_salt: "46U/+cq7",
+    extra: "SameSite=None"
   ]
 
   socket "/socket", MdFlashcardsWeb.UserSocket,
@@ -43,7 +44,7 @@ defmodule MdFlashcardsWeb.Endpoint do
   plug Plug.Session, @session_options
 
   plug Corsica,
-    origins: "http://localhost:3000",
+    origins: System.get_env("ALLOWED_ORIGIN_URL"),
     allow_credentials: true,
     allow_headers: ["content-type"]
 

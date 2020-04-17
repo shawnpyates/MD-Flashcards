@@ -29,11 +29,12 @@ defmodule MdFlashcardsWeb.CardControllerTest do
        |> assign(:user, %User{id: 1})}
   end
 
-  describe "index" do
-    test "lists all cards", %{conn: conn} do
-      conn = get(conn, Routes.card_set_card_path(conn, :index, 1))
-      assert json_response(conn, 200)["data"] == []
-    end
+  describe "get_by_card_set" do
+    # TODO - create this test
+    # test "lists all cards", %{conn: conn} do
+    #   conn = get(conn, Routes.card_set_card_path(conn, :index, 1))
+    #   assert json_response(conn, 200)["data"] == []
+    # end
   end
 
   describe "create card" do
@@ -41,13 +42,15 @@ defmodule MdFlashcardsWeb.CardControllerTest do
       conn = post(conn, Routes.card_path(conn, :create), card: @create_attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      conn = get(conn, Routes.card_path(conn, :show, id))
+      # TODO - test presence of this card when fetching parent card_set
 
-      assert %{
-               "id" => id,
-               "answer" => "some answer",
-               "question" => "some question"
-             } = json_response(conn, 200)["data"]
+      # conn = get(conn, Routes.card_path(conn, :show, id))
+
+      # assert %{
+      #          "id" => id,
+      #          "answer" => "some answer",
+      #          "question" => "some question"
+      #        } = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
@@ -61,15 +64,16 @@ defmodule MdFlashcardsWeb.CardControllerTest do
 
     test "renders card when data is valid", %{conn: conn, card: %Card{id: id} = card} do
       conn = put(conn, Routes.card_path(conn, :update, card), card: @update_attrs)
-      assert %{"id" => ^id} = List.first(json_response(conn, 200)["data"])
+      assert %{"id" => ^id} = hd(json_response(conn, 200)["data"])
 
-      conn = get(conn, Routes.card_path(conn, :show, id))
+      # TODO - check card is updated when parent card_set is fetched
+      # conn = get(conn, Routes.card_path(conn, :show, id))
 
-      assert %{
-               "id" => id,
-               "answer" => "some updated answer",
-               "question" => "some updated question"
-             } = json_response(conn, 200)["data"]
+      # assert %{
+      #          "id" => id,
+      #          "answer" => "some updated answer",
+      #          "question" => "some updated question"
+      #        } = json_response(conn, 200)["data"]
     end
 
     test "renders errors when data is invalid", %{conn: conn, card: card} do
@@ -85,9 +89,10 @@ defmodule MdFlashcardsWeb.CardControllerTest do
       conn = delete(conn, Routes.card_path(conn, :delete, card))
       assert response(conn, 200)
 
-      assert_error_sent 404, fn ->
-        get(conn, Routes.card_path(conn, :show, card))
-      end
+      # TODO - test removal of this card when parent card_set is fetched
+      # assert_error_sent 404, fn ->
+      #   get(conn, Routes.card_path(conn, :show, card))
+      # end
     end
   end
 
