@@ -12,8 +12,6 @@ defmodule MdFlashcardsWeb.Plugs.SetUser do
   def call(conn, _attrs) do
     user_id = get_session(conn, :user_id)
 
-    IO.inspect("user_id: ")
-    IO.inspect(user_id)
     cond do
       user = user_id && Repo.get!(User, user_id) ->
         assign(conn, :user, user)
@@ -22,7 +20,6 @@ defmodule MdFlashcardsWeb.Plugs.SetUser do
         cond do
           conn.assigns[:user] -> conn
           true ->
-            IO.inspect("++++")
             assign(conn, :user, nil)
         end
     end
