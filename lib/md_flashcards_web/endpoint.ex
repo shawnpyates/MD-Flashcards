@@ -44,7 +44,7 @@ defmodule MdFlashcardsWeb.Endpoint do
   plug Plug.Session, @session_options
 
   plug Corsica,
-    origins: System.get_env("ALLOWED_ORIGIN_URL"),
+    origins: "https://md-flashcards-ui.herokuapp.com",
     allow_credentials: true,
     allow_headers: ["content-type"]
 
