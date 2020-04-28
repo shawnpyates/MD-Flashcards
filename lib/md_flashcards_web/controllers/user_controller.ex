@@ -41,7 +41,7 @@ defmodule MdFlashcardsWeb.UserController do
       token: auth.credentials.token,
       email: auth.info.email,
       name: auth.info.name,
-      provider: auth.provider
+      provider: Atom.to_string(auth.provider)
     }
 
     changeset = User.changeset(%User{}, user_attrs)
