@@ -41,7 +41,7 @@ defmodule MdFlashcardsWeb.UserController do
       token: auth.credentials.token,
       email: auth.info.email,
       name: auth.info.name,
-      provider: auth.provider
+      provider: Atom.to_string(auth.provider)
     }
 
     changeset = User.changeset(%User{}, user_attrs)
@@ -51,8 +51,7 @@ defmodule MdFlashcardsWeb.UserController do
 
   def signout(conn, _attrs) do
     frontend_url = System.get_env("ALLOWED_ORIGIN_URL")
-    IO.puts(frontend_url)
-
+    
     conn
     |> configure_session(drop: true)
     |> redirect(external: frontend_url)
