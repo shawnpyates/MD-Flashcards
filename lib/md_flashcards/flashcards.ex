@@ -309,6 +309,24 @@ defmodule MdFlashcards.Flashcards do
     |> Repo.insert()
   end
 
+  def bulk_create_cards(cards, card_set_id) do
+    datetime = NaiveDateTime.truncate(NaiveDateTime.utc_now(), :second)
+
+    transformed_cards =
+      cards
+      |> Enum.map(fn row ->
+        %{
+          question: row["question"],
+          answer: row["answer"],
+          card_set_id: String.to_integer(card_set_id),
+          inserted_at: datetime,
+          updated_at: datetime
+        }
+      end)
+
+    Repo.insert_all(Card, transformed_cards, [])
+  end
+
   @doc """
   Updates a card.
 

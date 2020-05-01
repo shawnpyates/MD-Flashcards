@@ -14,7 +14,8 @@ defmodule MdFlashcards.FlashcardsTest do
 
     def card_group_fixture(attrs \\ %{}) do
       {:ok, %CardGroup{} = card_group} =
-        Map.merge(attrs, @valid_attrs)|> Flashcards.create_card_group()
+        Map.merge(attrs, @valid_attrs) |> Flashcards.create_card_group()
+
       card_group
     end
 
@@ -23,7 +24,8 @@ defmodule MdFlashcards.FlashcardsTest do
     end
 
     test "list_card_groups/0 returns all card_groups" do
-      user_params = %{ name: "x", provider: "y", token: "z", email: "a@b.com"}
+      user_params = %{name: "x", provider: "y", token: "z", email: "a@b.com"}
+
       with {:ok, %User{} = user} <- Accounts.create_user(user_params) do
         card_group = card_group_fixture(%{user_id: user.id}) |> drop_card_sets()
         assert hd(Flashcards.list_card_groups_by_user(user.id)) |> drop_card_sets() == card_group

@@ -19,7 +19,8 @@ defmodule MdFlashcardsWeb.Plugs.SetUser do
       true ->
         cond do
           conn.assigns[:user] -> conn
-          true -> assign(conn, :user, nil)
+          true ->
+            assign(conn, :user, nil)
         end
     end
   end

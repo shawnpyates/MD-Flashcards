@@ -21,6 +21,13 @@ defmodule MdFlashcardsWeb.CardController do
     end
   end
 
+  def bulk_create(conn, %{"cards" => cards}) do
+    with {_result, _} <- Flashcards.bulk_create_cards(cards, conn.params["card_set_id"]) do
+      all_cards = Flashcards.list_cards_by_card_set(conn.params["card_set_id"])
+      render(conn, "index.json", cards: all_cards)
+    end
+  end
+
   def update(conn, %{"id" => id, "card" => card_params}) do
     card = Flashcards.get_card!(id)
 
