@@ -32,9 +32,6 @@ defmodule MdFlashcardsWeb.UserController do
   end
 
   def get_current(conn, _attrs) do
-    IO.inspect("conn: ")
-    IO.inspect(conn)
-
     conn
     |> render("show.json", user: conn.assigns.user)
   end
