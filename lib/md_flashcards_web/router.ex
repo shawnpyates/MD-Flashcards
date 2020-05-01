@@ -20,6 +20,7 @@ defmodule MdFlashcardsWeb.Router do
 
     resources "/card_sets", CardSetController, except: [:new, :edit] do
       get "/cards", CardController, :get_by_card_set
+      post "/cards", CardController, :bulk_create
     end
 
     resources "/cards", CardController, only: [:create, :update, :delete]
